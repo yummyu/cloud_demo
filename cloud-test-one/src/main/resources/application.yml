@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: git_demo
+
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{traceId}] [%thread] %-5level %logger{50} - %msg%n"
+
+
+
