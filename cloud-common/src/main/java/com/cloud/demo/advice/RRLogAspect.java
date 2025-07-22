@@ -1,7 +1,10 @@
 package com.cloud.demo.advice;
 
+import com.cloud.demo.utils.JacksonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -10,6 +13,9 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
 
 /**
  * 请求响应日志切面
@@ -45,7 +51,7 @@ public class RRLogAspect {
      * @throws Throwable
      */
     @Around("logPointcut()")
-    public void log(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
         // 开始打印请求日志    
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
@@ -60,18 +66,21 @@ public class RRLogAspect {
         // 打印请求的 IP
         log.info("IP             : {}", request.getRemoteAddr());
         // 打印请求入参
-//        log.info("Request Args   : {}", new Gson().toJson(joinPoint.getArgs()));
-        ObjectMapper objectMapper = new ObjectMapper();
-        log.info("Request Args   : {}", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(joinPoint.getArgs()));
+        Object[] filteredArgs = Arrays.stream(joinPoint.getArgs())
+                .map(arg -> arg instanceof MultipartFile ?
+                        ((MultipartFile)arg).getOriginalFilename() : arg).map(arg -> arg instanceof HttpServletResponse ?
+                        "流文件" : arg)
+                .toArray();
+
+        log.info("Request Args   : {}", JacksonUtil.toJsonString(filteredArgs));
         long startTime = System.currentTimeMillis();
         Object result = joinPoint.proceed();
-        // 打印出参
-        log.info("Response Args  : {}", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
+        log.info("Response Args  : {}", JacksonUtil.toJsonString(result));
+
         // 执行耗时
         log.info("Time-Consuming : {} ms", System.currentTimeMillis() - startTime);
         log.info("=========================================== End ===========================================");
-        // 每个请求之间空一行
-        log.info("");
+        return result;
     }
 
 }
