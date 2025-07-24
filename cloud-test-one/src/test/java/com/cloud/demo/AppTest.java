@@ -6,9 +6,9 @@ import junit.framework.TestCase;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +30,29 @@ public class AppTest extends TestCase {
         LinkedHashMap<String, UserDto> collect = list.stream().collect(Collectors.toMap(UserDto::getId, dto -> dto, (dto1, dto2) -> dto1, LinkedHashMap::new));
 
         log.info("{}", collect);
+
+
+    }
+
+    @Test
+    public void testDateParse() {
+
+        Date date = new Date();
+        String dateStr = date.toString();
+        log.info("{}", dateStr);
+
+        // 定义原始日期格式
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+
+        // 解析原始日期字符串
+        LocalDateTime dateTime = LocalDateTime.parse(dateStr, inputFormatter);
+
+        // 定义目标日期格式
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // 格式化为目标格式
+        String format = dateTime.format(outputFormatter);
+        log.info("{}", format);
 
 
     }
