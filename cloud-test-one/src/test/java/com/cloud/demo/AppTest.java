@@ -2,10 +2,12 @@ package com.cloud.demo;
 
 import cn.hutool.core.util.StrUtil;
 import com.cloud.demo.dto.UserDto;
+import com.cloud.demo.utils.FileNameTruncator;
 import junit.framework.TestCase;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -53,8 +55,18 @@ public class AppTest extends TestCase {
         // 格式化为目标格式
         String format = dateTime.format(outputFormatter);
         log.info("{}", format);
+    }
+
+    @Test
+    public void testFileName() {
+        String name ="Bocom201210_G001_001_测试长度测试长度长度测试长度测试长度长度测试长度测试长度长度测试长度测试长度长度测试长度测试长度长度测试长度测试长度长度测试长度测试长度长度测试长度测试长度长度.docx";
+
+        String s = FileNameTruncator.truncateFileName(name);
+
+        log.info("{}", s);
 
 
     }
+
 
 }

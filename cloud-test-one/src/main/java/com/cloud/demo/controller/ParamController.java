@@ -1,6 +1,5 @@
 package com.cloud.demo.controller;
 
-import cn.hutool.core.io.FileUtil;
 import com.cloud.demo.dto.R;
 import com.cloud.demo.dto.UserDto;
 import com.cloud.demo.utils.FileUpDownUtil;
@@ -10,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 
 @Slf4j

@@ -9,6 +9,7 @@
     <modules>
         <module>cloud-common</module>
         <module>cloud-test-one</module>
+        <module>cloud-test-ms</module>
     </modules>
 
     <properties>
